@@ -1,6 +1,7 @@
 package com.teamaurora.reforested.core;
 
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
+import com.teamaurora.reforested.core.other.ReforestedEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,7 +50,7 @@ public class Reforested
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        MinecraftForge.EVENT_BUS.register(new ReforestedEvents());
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
