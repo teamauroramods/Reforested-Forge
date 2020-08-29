@@ -1,33 +1,42 @@
 package com.teamaurora.reforested.common.world.gen.feature;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LeavesBlock;
+import com.teamaurora.reforested.common.world.gen.treedecorator.BeehiveTreeDecorator;
+import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.BeehiveTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldWriter;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.IWorldGenerationBaseReader;
 import net.minecraft.world.gen.IWorldGenerationReader;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
+import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.StructureManager;
+import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraftforge.common.IPlantable;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-public class BirchTreeFeature extends Feature<BaseTreeFeatureConfig> {
-    public BirchTreeFeature(Codec<BaseTreeFeatureConfig> config) {
+public class BirchTreeFeature extends Feature<BirchFeatureConfig> {
+    public BirchTreeFeature(Codec<BirchFeatureConfig> config) {
         super(config);
     }
 
     @Override
-    public boolean func_230362_a_(ISeedReader worldIn, StructureManager manager, ChunkGenerator generator, Random rand, BlockPos position, BaseTreeFeatureConfig config) {
+    public boolean func_230362_a_(ISeedReader worldIn, StructureManager manager, ChunkGenerator generator, Random rand, BlockPos position, BirchFeatureConfig config) {
         int heightOffset = rand.nextInt(3);
         int i = 6 + heightOffset;
 
@@ -76,6 +85,26 @@ public class BirchTreeFeature extends Feature<BaseTreeFeatureConfig> {
                 placeLeafAt(worldIn, position.add(0, i-3, -1), rand, config);
                 placeLeafAt(worldIn, position.add(0, i-3, 1), rand, config);
 
+
+                float chancef = config.beehiveChance == 0 ? 1.0F : 1.0F / config.beehiveChance;
+                int chance = (int)Math.ceil(chancef);
+                if (rand.nextInt(chance) == 0 && config.beehiveChance != 0) {
+                    // place at y=i-4
+                    Direction direction = BeehiveBlock.func_235331_a_(rand);
+                    BlockState blockstate = Blocks.BEE_NEST.getDefaultState().with(BeehiveBlock.FACING, direction);
+                    setLogState(worldIn, position.up(i-4).offset(direction), blockstate);
+                    TileEntity tileentity = worldIn.getTileEntity(position.up(i-4).offset(direction));
+                    if (tileentity instanceof BeehiveTileEntity) {
+                        BeehiveTileEntity beehivetileentity = (BeehiveTileEntity)tileentity;
+                        int j = 2 + rand.nextInt(2);
+
+                        for(int k = 0; k < j; ++k) {
+                            BeeEntity beeentity = new BeeEntity(EntityType.BEE, worldIn.getWorld());
+                            beehivetileentity.tryEnterHive(beeentity, false, rand.nextInt(599));
+                        }
+                    }
+                }
+
                 return true;
             } else {
                 return false;
@@ -85,17 +114,17 @@ public class BirchTreeFeature extends Feature<BaseTreeFeatureConfig> {
         }
     }
 
-    private void placeLogAt(IWorldWriter worldIn, BlockPos pos, Random rand, BaseTreeFeatureConfig config) {
+    private void placeLogAt(IWorldWriter worldIn, BlockPos pos, Random rand, BirchFeatureConfig config) {
         this.setLogState(worldIn, pos, config.trunkProvider.getBlockState(rand, pos));
     }
 
-    private void placeRandomLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BaseTreeFeatureConfig config) {
+    private void placeRandomLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BirchFeatureConfig config) {
         if (rand.nextBoolean()) {
             placeLeafAt(world, pos, rand, config);
         }
     }
 
-    private void placeLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BaseTreeFeatureConfig config)
+    private void placeLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BirchFeatureConfig config)
     {
         if (isAirOrLeaves(world, pos))
         {

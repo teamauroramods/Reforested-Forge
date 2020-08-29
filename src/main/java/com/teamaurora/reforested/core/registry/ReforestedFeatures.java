@@ -5,6 +5,7 @@ import com.teamaurora.reforested.common.world.gen.feature.BirchShrubFeature;
 import com.teamaurora.reforested.common.world.gen.feature.BirchTreeFeature;
 import com.teamaurora.reforested.common.world.gen.feature.SmallMossyBoulderFeature;
 import com.teamaurora.reforested.common.world.gen.feature.TallBirchTreeFeature;
+import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
@@ -13,8 +14,8 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ReforestedFeatures {
-    public static final Feature<BaseTreeFeatureConfig> BIRCH_TREE = new BirchTreeFeature(BaseTreeFeatureConfig.field_236676_a_);
-    public static final Feature<BaseTreeFeatureConfig> TALL_BIRCH_TREE = new TallBirchTreeFeature(BaseTreeFeatureConfig.field_236676_a_);
+    public static final Feature<BirchFeatureConfig> BIRCH_TREE = new BirchTreeFeature(BirchFeatureConfig.field_236676_a_);
+    public static final Feature<BirchFeatureConfig> TALL_BIRCH_TREE = new TallBirchTreeFeature(BirchFeatureConfig.field_236676_a_);
     public static final Feature<BaseTreeFeatureConfig> BIRCH_SHRUB = new BirchShrubFeature(BaseTreeFeatureConfig.field_236676_a_);
     public static final Feature<NoFeatureConfig> SMALL_BOULDER = new SmallMossyBoulderFeature(NoFeatureConfig.field_236558_a_);
 

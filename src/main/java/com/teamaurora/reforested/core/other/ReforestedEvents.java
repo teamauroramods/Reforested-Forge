@@ -1,6 +1,7 @@
 package com.teamaurora.reforested.core.other;
 
 import com.teamaurora.reforested.common.world.biome.ReforestedBiomeFeatures;
+import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
 import com.teamaurora.reforested.core.Reforested;
 import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.BlockState;
@@ -27,7 +28,7 @@ public class ReforestedEvents {
             if (state.getBlock() == Blocks.BIRCH_SAPLING) {
                 event.setResult(Event.Result.DENY);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
-                ConfiguredFeature<BaseTreeFeatureConfig, ?> configuredFeature;
+                ConfiguredFeature<BirchFeatureConfig, ?> configuredFeature;
                 if (rand.nextInt(10) == 0) {
                     configuredFeature = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(ReforestedBiomeFeatures.BIRCH_TREE_CONFIG);
                 } else {
