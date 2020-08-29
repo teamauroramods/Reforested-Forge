@@ -28,7 +28,7 @@ public class ReforestedEvents {
                 event.setResult(Event.Result.DENY);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
                 ConfiguredFeature<BaseTreeFeatureConfig, ?> configuredFeature;
-                configuredFeature = ReforestedFeatures.BIRCH_TREE.withConfiguration(ReforestedBiomeFeatures.BIRCH_TREE_CONFIG);
+                configuredFeature = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(ReforestedBiomeFeatures.BIRCH_TREE_CONFIG);
                 if (!configuredFeature.func_236265_a_(world, world.func_241112_a_(), world.getChunkProvider().getChunkGenerator(), rand, pos)) {
                     world.setBlockState(pos, state);
                 }
