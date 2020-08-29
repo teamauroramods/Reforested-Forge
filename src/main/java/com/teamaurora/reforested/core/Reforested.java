@@ -2,6 +2,7 @@ package com.teamaurora.reforested.core;
 
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import com.teamaurora.reforested.core.other.ReforestedEvents;
+import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -51,6 +53,9 @@ public class Reforested
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new ReforestedEvents());
+        DeferredWorkQueue.runLater(() -> {
+            ReforestedFeatures.generateFeatures();
+        });
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
