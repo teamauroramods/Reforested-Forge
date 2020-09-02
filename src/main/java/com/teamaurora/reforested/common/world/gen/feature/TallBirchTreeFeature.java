@@ -59,7 +59,12 @@ public class TallBirchTreeFeature extends Feature<BirchFeatureConfig> {
                 for (int j = 0; j < i; j++) {
                     placeLogAt(worldIn, position.up(j), rand, config, logPos);
                 }
-                placeSmallRingAt(worldIn, position.up(i+1), rand, config, leafPos);
+                //placeSmallRingAt(worldIn, position.up(i+1), rand, config, leafPos);
+                placeLeafAt(worldIn, position.up(i+1), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(-1, i+1, 0), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(1, i+1, 0), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(0, i+1, -1), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(0, i+1, 1), rand, config, leafPos);
                 placeSmallDiscAt(worldIn, position.up(i), rand, config, leafPos);
 
                 placeLargeDiscAt(worldIn, position.up(i-1), rand, config, leafPos);

@@ -50,6 +50,12 @@ public class BirchShrubFeature extends Feature<BaseTreeFeatureConfig> {
                 placeRandomLeafAt(worldIn, position.add(0, 1, -1), rand, config);
                 placeRandomLeafAt(worldIn, position.add(0, 1, 1), rand, config);
 
+                for (int x = -1; x <= 1; x++) {
+                    for (int z = -1; z <= 1; z++) {
+                        placeLeafAt(worldIn, position.add(x, -1, z), rand, config);
+                    }
+                }
+
                 return true;
             } else {
                 return false;
