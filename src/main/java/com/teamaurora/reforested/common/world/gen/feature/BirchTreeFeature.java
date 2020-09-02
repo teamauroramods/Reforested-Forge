@@ -12,6 +12,7 @@ import net.minecraft.tileentity.BeehiveTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
@@ -25,10 +26,7 @@ import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraftforge.common.IPlantable;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class BirchTreeFeature extends Feature<BirchFeatureConfig> {
     public BirchTreeFeature(Codec<BirchFeatureConfig> config) {
@@ -42,53 +40,57 @@ public class BirchTreeFeature extends Feature<BirchFeatureConfig> {
 
         boolean flag = true;
         if (position.getY() >= 1 && position.getY() + i + 1 <= worldIn.getHeight()) {
-            for (int j = 0; j < i; j++) {
-                if (!isAirOrLeaves(worldIn, position.up(j))) {
+            for (BlockPos pos : BlockPos.getAllInBoxMutable(position.add(-1, 0, -1), position.add(1, i, 1))) {
+            //for (int j = 0; j < i; j++) {
+                if (!isAirOrLeaves(worldIn, pos)) {
                     flag = false;
                 }
             }
             if (!flag) {
                 return false;
             } else if (isValidGround(worldIn, position.down())) {
+                List<BlockPos> logPos = new ArrayList<>();
+                List<BlockPos> leafPos = new ArrayList<>();
+
                 setDirtAt(worldIn, position.down());
 
                 for (int j = 0; j < i; j++) {
-                    placeLogAt(worldIn, position.up(j), rand, config);
+                    placeLogAt(worldIn, position.up(j), rand, config, logPos);
                 }
-                placeLeafAt(worldIn, position.up(i+1), rand, config);
+                placeLeafAt(worldIn, position.up(i+1), rand, config, leafPos);
 
-                placeLeafAt(worldIn, position.add(0, i, 0), rand, config);
-                placeLeafAt(worldIn, position.add(-1, i, 0), rand, config);
-                placeLeafAt(worldIn, position.add(1, i, 0), rand, config);
-                placeLeafAt(worldIn, position.add(0, i, -1), rand, config);
-                placeLeafAt(worldIn, position.add(0, i, 1), rand, config);
+                placeLeafAt(worldIn, position.add(0, i, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(-1, i, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(1, i, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(0, i, -1), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(0, i, 1), rand, config, leafPos);
 
 
-                placeLeafAt(worldIn, position.add(0, i-1, 0), rand, config);
-                placeLeafAt(worldIn, position.add(-1, i-1, 0), rand, config);
-                placeLeafAt(worldIn, position.add(1, i-1, 0), rand, config);
-                placeLeafAt(worldIn, position.add(0, i-1, -1), rand, config);
-                placeLeafAt(worldIn, position.add(0, i-1, 1), rand, config);
-                placeRandomLeafAt(worldIn, position.add(-1, i-1, -1), rand, config);
-                placeRandomLeafAt(worldIn, position.add(-1, i-1, 1), rand, config);
-                placeRandomLeafAt(worldIn, position.add(1, i-1, -1), rand, config);
-                placeRandomLeafAt(worldIn, position.add(1, i-1, 1), rand, config);
+                placeLeafAt(worldIn, position.add(0, i-1, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(-1, i-1, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(1, i-1, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(0, i-1, -1), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(0, i-1, 1), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(-1, i-1, -1), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(-1, i-1, 1), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(1, i-1, -1), rand, config, leafPos);
+                placeRandomLeafAt(worldIn, position.add(1, i-1, 1), rand, config, leafPos);
 
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        placeLeafAt(worldIn, position.add(x, i-2, z), rand, config);
+                        placeLeafAt(worldIn, position.add(x, i-2, z), rand, config, leafPos);
                     }
                 }
 
-                placeLeafAt(worldIn, position.add(-1, i-3, 0), rand, config);
-                placeLeafAt(worldIn, position.add(1, i-3, 0), rand, config);
-                placeLeafAt(worldIn, position.add(0, i-3, -1), rand, config);
-                placeLeafAt(worldIn, position.add(0, i-3, 1), rand, config);
+                placeLeafAt(worldIn, position.add(-1, i-3, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(1, i-3, 0), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(0, i-3, -1), rand, config, leafPos);
+                placeLeafAt(worldIn, position.add(0, i-3, 1), rand, config, leafPos);
 
 
                 float chancef = config.beehiveChance == 0 ? 1.0F : 1.0F / config.beehiveChance;
                 int chance = (int)Math.ceil(chancef);
-                if (rand.nextInt(chance) == 0 && config.beehiveChance != 0) {
+                /*if (rand.nextInt(chance) == 0 && config.beehiveChance != 0) {
                     // place at y=i-4
                     Direction direction = BeehiveBlock.func_235331_a_(rand);
                     BlockState blockstate = Blocks.BEE_NEST.getDefaultState().with(BeehiveBlock.FACING, direction);
@@ -103,6 +105,16 @@ public class BirchTreeFeature extends Feature<BirchFeatureConfig> {
                             beehivetileentity.tryEnterHive(beeentity, false, rand.nextInt(599));
                         }
                     }
+                }*/
+
+                Set<BlockPos> decSet = Sets.newHashSet();
+                MutableBoundingBox mutableBoundingBox = MutableBoundingBox.getNewBoundingBox();
+                if (!config.decorators.isEmpty()) {
+                    logPos.sort(Comparator.comparingInt(Vector3i::getY));
+                    leafPos.sort(Comparator.comparingInt(Vector3i::getY));
+                    config.decorators.forEach((decorator)->{
+                        decorator.func_225576_a_(worldIn, rand, logPos, leafPos, decSet, mutableBoundingBox);
+                    });
                 }
 
                 return true;
@@ -114,21 +126,23 @@ public class BirchTreeFeature extends Feature<BirchFeatureConfig> {
         }
     }
 
-    private void placeLogAt(IWorldWriter worldIn, BlockPos pos, Random rand, BirchFeatureConfig config) {
+    private void placeLogAt(IWorldWriter worldIn, BlockPos pos, Random rand, BirchFeatureConfig config, List<BlockPos> log) {
         this.setLogState(worldIn, pos, config.trunkProvider.getBlockState(rand, pos));
+        log.add(pos);
     }
 
-    private void placeRandomLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BirchFeatureConfig config) {
+    private void placeRandomLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BirchFeatureConfig config, List<BlockPos> leaf) {
         if (rand.nextBoolean()) {
-            placeLeafAt(world, pos, rand, config);
+            placeLeafAt(world, pos, rand, config, leaf);
         }
     }
 
-    private void placeLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BirchFeatureConfig config)
+    private void placeLeafAt(IWorldGenerationReader world, BlockPos pos, Random rand, BirchFeatureConfig config, List<BlockPos> leaf)
     {
         if (isAirOrLeaves(world, pos))
         {
             this.setLogState(world, pos, config.leavesProvider.getBlockState(rand, pos).with(LeavesBlock.DISTANCE, 1));
+            leaf.add(pos);
         }
     }
 

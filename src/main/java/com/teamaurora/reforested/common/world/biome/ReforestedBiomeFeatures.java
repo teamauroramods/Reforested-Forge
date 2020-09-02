@@ -1,6 +1,7 @@
 package com.teamaurora.reforested.common.world.biome;
 
 import com.google.common.collect.ImmutableList;
+import com.teamaurora.reforested.common.world.gen.feature.TallBirchTreeFeature;
 import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
 import com.teamaurora.reforested.common.world.gen.treedecorator.BeehiveTreeDecorator;
 import com.teamaurora.reforested.core.ReforestedConfig;
@@ -37,24 +38,35 @@ public class ReforestedBiomeFeatures {
     private static final BeehiveTreeDecorator field_235164_cy_ = new BeehiveTreeDecorator(0.02F);
     private static final BeehiveTreeDecorator field_235165_cz_ = new BeehiveTreeDecorator(0.05F);
 
-    private static final BeehiveTreeDecorator BIRCH_BEEHIVE_DECORATOR = new BeehiveTreeDecorator(0.1F);
+    private static final BeehiveTreeDecorator BIRCH_BEEHIVE_DECORATOR = new BeehiveTreeDecorator(0.025F);
 
     public static final BaseTreeFeatureConfig BIRCH_SHRUB_CONFIG = (new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(BIRCH_LOG), new SimpleBlockStateProvider(BIRCH_LEAVES), null, null, null)).func_236700_a_().build();
 
     public static final BirchFeatureConfig BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), new SimpleBlockStateProvider(BIRCH_LEAVES), null, null, null)).func_236700_a_().build();
-    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_1_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.002F);
-    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_2_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.02F);
-    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_3_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.05F);
-    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.025F);
+    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_1_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
+    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_2_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
+    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_3_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
+    public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
 
     public static final BirchFeatureConfig PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,149).addWeightedBlockstate(PEACH_BIRCH_LEAVES,1), null, null, null)).func_236700_a_().build();
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.002F);
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.02F);
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.05F);
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.withBeehiveChance(0.025F);
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
 
     public static final BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(PEACH_BIRCH_LEAVES,2), null, null, null)).func_236700_a_().build();
 
+    public static void addBirchTrees(Biome biome) {
+        boolean peaches = ModList.get().isLoaded("fruitful") && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+
+        biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
+    }
+
+    public static void addTallBirchForestTrees(Biome biome) {
+        boolean peaches = ModList.get().isLoaded("fruitful") && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+
+        biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG).withChance(0.5F)), ReforestedFeatures.BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG))).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
+    }
 
     public static void replaceBirchTrees(Biome biome) {
         List<ConfiguredFeature<?, ?>> list = biome.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
@@ -170,7 +182,8 @@ public class ReforestedBiomeFeatures {
     }
 
     public static void addBirchForestFoliage(Biome biomeIn) {
-        biomeIn.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, ReforestedFeatures.SMALL_BOULDER.withConfiguration(new NoFeatureConfig()).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(2))));
+        biomeIn.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, ReforestedFeatures.SMALL_BOULDER.withConfiguration(new NoFeatureConfig()).withPlacement(Placement.COUNT_TOP_SOLID.configure(new FrequencyConfig(2))));
+        biomeIn.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.BIRCH_SHRUB.withConfiguration(BIRCH_TREE_CONFIG).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(4))));
     }
 
     public static void addTallBirchForestFoliage(Biome biomeIn) {

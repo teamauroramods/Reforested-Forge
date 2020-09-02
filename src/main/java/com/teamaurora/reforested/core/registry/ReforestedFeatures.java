@@ -6,6 +6,7 @@ import com.teamaurora.reforested.common.world.gen.feature.BirchTreeFeature;
 import com.teamaurora.reforested.common.world.gen.feature.SmallMossyBoulderFeature;
 import com.teamaurora.reforested.common.world.gen.feature.TallBirchTreeFeature;
 import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
+import com.teamaurora.reforested.core.Reforested;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
@@ -31,12 +32,15 @@ public class ReforestedFeatures {
         }
         if (biome == Biomes.BIRCH_FOREST || biome == Biomes.BIRCH_FOREST_HILLS) {
             ReforestedBiomeFeatures.addSparseTallBirches(biome);
+            ReforestedBiomeFeatures.addBirchTrees(biome);
         }
         if (biome == Biomes.TALL_BIRCH_HILLS) {
             ReforestedBiomeFeatures.addSparseBirchShrubs(biome);
+            ReforestedBiomeFeatures.addTallBirchForestTrees(biome);
         }
         if (biome == Biomes.TALL_BIRCH_FOREST) {
             ReforestedBiomeFeatures.addTallBirchForestFoliage(biome);
+            ReforestedBiomeFeatures.addTallBirchForestTrees(biome);
         }
     }
 }
