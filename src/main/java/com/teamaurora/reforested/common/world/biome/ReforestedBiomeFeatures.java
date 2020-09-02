@@ -3,6 +3,7 @@ package com.teamaurora.reforested.common.world.biome;
 import com.google.common.collect.ImmutableList;
 import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
 import com.teamaurora.reforested.common.world.gen.treedecorator.BeehiveTreeDecorator;
+import com.teamaurora.reforested.core.ReforestedConfig;
 import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,6 +19,7 @@ import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.FrequencyConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -59,6 +61,14 @@ public class ReforestedBiomeFeatures {
         List<ConfiguredFeature<?, ?>> toRemove = new ArrayList<>();
         int listSize = list.size();
 
+        boolean peaches = ModList.get().isLoaded("fruitful") && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+
+        BirchFeatureConfig CONFIG_0 = peaches ? PEACH_BIRCH_TREE_CONFIG : BIRCH_TREE_CONFIG;
+        BirchFeatureConfig CONFIG_1 = peaches ? PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG : BIRCH_TREE_BEEHIVES_1_CONFIG;
+        BirchFeatureConfig CONFIG_2 = peaches ? PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG : BIRCH_TREE_BEEHIVES_2_CONFIG;
+        BirchFeatureConfig CONFIG_3 = peaches ? PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG : BIRCH_TREE_BEEHIVES_3_CONFIG;
+        BirchFeatureConfig CONFIG_4 = peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG;
+
         boolean isBirchBiome = (biome == Biomes.BIRCH_FOREST || biome == Biomes.BIRCH_FOREST_HILLS || biome == Biomes.TALL_BIRCH_FOREST || biome == Biomes.TALL_BIRCH_HILLS);
 
         for (int i = 0; i < listSize; i++) {
@@ -71,17 +81,17 @@ public class ReforestedBiomeFeatures {
                     for (ConfiguredRandomFeatureList crfl : tree.features) {
                         if (crfl.feature.feature instanceof TreeFeature) {
                             if (isBirchBiome && (crfl.feature.config == DefaultBiomeFeatures.BIRCH_TREE_CONFIG || crfl.feature.config == DefaultBiomeFeatures.field_230129_h_ || crfl.feature.config == DefaultBiomeFeatures.field_230135_r_ || crfl.feature.config == DefaultBiomeFeatures.field_230136_s_)) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_4_CONFIG), crfl.chance));
+                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_4), crfl.chance));
                             } else if (crfl.feature.config == DefaultBiomeFeatures.BIRCH_TREE_CONFIG) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG), crfl.chance));
+                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_0), crfl.chance));
                             } else if (crfl.feature.config == DefaultBiomeFeatures.field_230129_h_) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_1_CONFIG), crfl.chance));
+                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_1), crfl.chance));
                             } else if (crfl.feature.config == DefaultBiomeFeatures.field_230135_r_) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_2_CONFIG), crfl.chance));
+                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_2), crfl.chance));
                             } else if (crfl.feature.config == DefaultBiomeFeatures.field_230136_s_) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_3_CONFIG), crfl.chance));
+                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_3), crfl.chance));
                             } else if (crfl.feature.config == DefaultBiomeFeatures.field_230130_i_) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG), crfl.chance));
+                                tempFeatures.add(new ConfiguredRandomFeatureList<BirchFeatureConfig>(ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(CONFIG_0), crfl.chance));
                             } else {
                                 tempFeatures.add(crfl);
                             }
@@ -95,17 +105,17 @@ public class ReforestedBiomeFeatures {
                         BaseTreeFeatureConfig treeCfg = (BaseTreeFeatureConfig) tree.defaultFeature.config;
                         ConfiguredFeature<?, ?> cfgdTree = new ConfiguredFeature<BaseTreeFeatureConfig, TreeFeature>((TreeFeature)tree.defaultFeature.feature, (BaseTreeFeatureConfig)tree.defaultFeature.config);
                         if (isBirchBiome && (treeCfg == DefaultBiomeFeatures.BIRCH_TREE_CONFIG || treeCfg == DefaultBiomeFeatures.field_230129_h_ || treeCfg == DefaultBiomeFeatures.field_230135_r_ || treeCfg == DefaultBiomeFeatures.field_230136_s_)) {
-                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_4_CONFIG);
+                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_4);
                         } else if (treeCfg == DefaultBiomeFeatures.BIRCH_TREE_CONFIG) {
-                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG);
+                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_0);
                         } else if (treeCfg == DefaultBiomeFeatures.field_230129_h_) {
-                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_1_CONFIG);
+                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_1);
                         } else if (treeCfg == DefaultBiomeFeatures.field_230135_r_) {
-                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_2_CONFIG);
+                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_2);
                         } else if (treeCfg == DefaultBiomeFeatures.field_230136_s_) {
-                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_3_CONFIG);
+                            cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_3);
                         } else if (treeCfg == DefaultBiomeFeatures.field_230130_i_) {
-                            cfgdTree = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG);
+                            cfgdTree = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(CONFIG_0);
                         }
                         //ConfiguredFeature<?,?> tempDef = new ConfiguredFeature<BaseTreeFeatureConfig, Feature<BaseTreeFeatureConfig>>((Feature<BaseTreeFeatureConfig>) tree.defaultFeature.feature, tempDefCfg);
                         ConfiguredFeature<DecoratedFeatureConfig, ?> tempFeature = new ConfiguredFeature<DecoratedFeatureConfig, DecoratedFeature>(
@@ -129,17 +139,17 @@ public class ReforestedBiomeFeatures {
                     BaseTreeFeatureConfig treeCfg = (BaseTreeFeatureConfig) decorated.feature.config;
                     ConfiguredFeature<?, ?> cfgdTree = new ConfiguredFeature<>((TreeFeature)decorated.feature.feature, (BaseTreeFeatureConfig)decorated.feature.config);
                     if (isBirchBiome && (treeCfg == DefaultBiomeFeatures.BIRCH_TREE_CONFIG || treeCfg == DefaultBiomeFeatures.field_230129_h_ || treeCfg == DefaultBiomeFeatures.field_230135_r_ || treeCfg == DefaultBiomeFeatures.field_230136_s_)) {
-                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_4_CONFIG);
+                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_4);
                     } if (treeCfg == DefaultBiomeFeatures.BIRCH_TREE_CONFIG) {
-                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG);
+                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_0);
                     } else if (treeCfg == DefaultBiomeFeatures.field_230129_h_) {
-                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_1_CONFIG);
+                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_1);
                     } else if (treeCfg == DefaultBiomeFeatures.field_230135_r_) {
-                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_2_CONFIG);
+                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_2);
                     } else if (treeCfg == DefaultBiomeFeatures.field_230136_s_) {
-                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(BIRCH_TREE_BEEHIVES_3_CONFIG);
+                        cfgdTree = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG_3);
                     } else if (treeCfg == DefaultBiomeFeatures.field_230130_i_) {
-                        cfgdTree = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG);
+                        cfgdTree = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(CONFIG_0);
                     }
                     ConfiguredFeature<DecoratedFeatureConfig, ?> tempFeature = new ConfiguredFeature<DecoratedFeatureConfig, DecoratedFeature>(
                             (DecoratedFeature) configuredFeature.feature, new DecoratedFeatureConfig(
