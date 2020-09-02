@@ -125,7 +125,7 @@ public class ReforestedBiomeFeatures {
                         biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, tempFeature);
                     }
                     toRemove.add(configuredFeature);
-                } else if (decorated.feature.config instanceof BaseTreeFeatureConfig) {
+                } else if (decorated.feature.config instanceof BaseTreeFeatureConfig && decorated.feature.feature instanceof TreeFeature) {
                     BaseTreeFeatureConfig treeCfg = (BaseTreeFeatureConfig) decorated.feature.config;
                     ConfiguredFeature<?, ?> cfgdTree = new ConfiguredFeature<>((TreeFeature)decorated.feature.feature, (BaseTreeFeatureConfig)decorated.feature.config);
                     if (isBirchBiome && (treeCfg == DefaultBiomeFeatures.BIRCH_TREE_CONFIG || treeCfg == DefaultBiomeFeatures.field_230129_h_ || treeCfg == DefaultBiomeFeatures.field_230135_r_ || treeCfg == DefaultBiomeFeatures.field_230136_s_)) {
@@ -153,6 +153,10 @@ public class ReforestedBiomeFeatures {
         for (int i = 0; i < toRemove.size(); i++) {
             list.remove(toRemove.get(i));
         }
+    }
+
+    public static void addSparseTallBirches(Biome biomeIn) {
+        biomeIn.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(BIRCH_TREE_CONFIG).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(4))));
     }
 
     public static void addBirchForestFoliage(Biome biomeIn) {
