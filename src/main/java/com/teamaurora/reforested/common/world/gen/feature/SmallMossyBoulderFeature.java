@@ -77,7 +77,7 @@ public class SmallMossyBoulderFeature extends Feature<NoFeatureConfig> {
             return worldIn.hasBlockState(pos, state -> state.canBeReplacedByLeaves((net.minecraft.world.IWorldReader) worldIn, pos));
         }
         return worldIn.hasBlockState(pos, (state) -> {
-            return state.isAir() || state.isIn(BlockTags.LEAVES);
+            return state.isAir() || state.isIn(BlockTags.LEAVES) || state.getBlock() == Blocks.WATER || state.isIn(BlockTags.SMALL_FLOWERS) || state.isIn(BlockTags.TALL_FLOWERS) || state.getBlock() == Blocks.TALL_GRASS || state.getBlock() == Blocks.GRASS || state.getBlock() == Blocks.FERN || state.getBlock() == Blocks.LARGE_FERN;
         });
     }
 

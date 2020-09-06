@@ -38,7 +38,7 @@ public class ReforestedBiomeFeatures {
     private static final BeehiveTreeDecorator field_235164_cy_ = new BeehiveTreeDecorator(0.02F);
     private static final BeehiveTreeDecorator field_235165_cz_ = new BeehiveTreeDecorator(0.05F);
 
-    private static final BeehiveTreeDecorator BIRCH_BEEHIVE_DECORATOR = new BeehiveTreeDecorator(0.025F);
+    private static final BeehiveTreeDecorator BIRCH_BEEHIVE_DECORATOR = new BeehiveTreeDecorator(0.01F);
 
     public static final BaseTreeFeatureConfig BIRCH_SHRUB_CONFIG = (new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(BIRCH_LOG), new SimpleBlockStateProvider(BIRCH_LEAVES), null, null, null)).func_236700_a_().build();
 
