@@ -13,6 +13,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
@@ -29,10 +30,11 @@ public class ReforestedEvents {
                 event.setResult(Event.Result.DENY);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
                 ConfiguredFeature<BirchFeatureConfig, ?> configuredFeature;
+                BirchFeatureConfig CONFIG = ModList.get().isLoaded("fruitful") && world.getBlockState(pos.down()).getBlock() == Blocks.PODZOL ? ReforestedBiomeFeatures.DENSE_PEACH_BIRCH_TREE_CONFIG : ReforestedBiomeFeatures.BIRCH_TREE_CONFIG;
                 if (rand.nextInt(10) == 0) {
-                    configuredFeature = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(ReforestedBiomeFeatures.BIRCH_TREE_CONFIG);
+                    configuredFeature = ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(CONFIG);
                 } else {
-                    configuredFeature = ReforestedFeatures.BIRCH_TREE.withConfiguration(ReforestedBiomeFeatures.BIRCH_TREE_CONFIG);
+                    configuredFeature = ReforestedFeatures.BIRCH_TREE.withConfiguration(CONFIG);
                 }
                 if (!configuredFeature.func_236265_a_(world, world.func_241112_a_(), world.getChunkProvider().getChunkGenerator(), rand, pos)) {
                     world.setBlockState(pos, state);
