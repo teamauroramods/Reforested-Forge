@@ -5,6 +5,8 @@ import com.teamaurora.reforested.common.world.gen.feature.TallBirchTreeFeature;
 import com.teamaurora.reforested.common.world.gen.feature.config.BirchFeatureConfig;
 import com.teamaurora.reforested.common.world.gen.treedecorator.BeehiveTreeDecorator;
 import com.teamaurora.reforested.core.ReforestedConfig;
+import com.teamaurora.reforested.core.compatibility.Autumnity;
+import com.teamaurora.reforested.core.compatibility.Fruitful;
 import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,13 +28,19 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.teamaurora.reforested.core.compatibility.Autumnity.MAPLE_LOG_BLOCK;
+import static com.teamaurora.reforested.core.compatibility.Autumnity.YELLOW_MAPLE_LEAVES_BLOCK;
+
 public class ReforestedBiomeFeatures {
-    @ObjectHolder("fruitful:peach_birch_leaves")
-    public static final Block PEACH_BIRCH_LEAVES_BLOCK = null;
+
+    public static BlockState MAPLE_LOG = Autumnity.isInstalled() ? MAPLE_LOG_BLOCK.getDefaultState() : Blocks.OAK_LOG.getDefaultState();
+    public static BlockState YELLOW_MAPLE_LEAVES = Autumnity.isInstalled() ? YELLOW_MAPLE_LEAVES_BLOCK.getDefaultState() : Blocks.OAK_LEAVES.getDefaultState();
+
+    public static final BaseTreeFeatureConfig YELLOW_MAPLE_TREE_CONFIG = (new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(MAPLE_LOG), new SimpleBlockStateProvider(YELLOW_MAPLE_LEAVES), null, null, null)).func_236700_a_().build();
 
     public static BlockState BIRCH_LOG = Blocks.BIRCH_LOG.getDefaultState();
     public static BlockState BIRCH_LEAVES = Blocks.BIRCH_LEAVES.getDefaultState();
-    public static BlockState PEACH_BIRCH_LEAVES = PEACH_BIRCH_LEAVES_BLOCK == null ? Blocks.BIRCH_LEAVES.getDefaultState() : PEACH_BIRCH_LEAVES_BLOCK.getDefaultState();
+    public static BlockState PEACH_BIRCH_LEAVES = Fruitful.isInstalled() ? Fruitful.PEACH_BIRCH_LEAVES.getDefaultState() : Blocks.BIRCH_LEAVES.getDefaultState();
 
     private static final BeehiveTreeDecorator field_235163_cx_ = new BeehiveTreeDecorator(0.002F);
     private static final BeehiveTreeDecorator field_235164_cy_ = new BeehiveTreeDecorator(0.02F);
@@ -57,13 +65,19 @@ public class ReforestedBiomeFeatures {
     public static final BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(PEACH_BIRCH_LEAVES,2), null, null, null)).func_236700_a_().build();
 
     public static void addBirchTrees(Biome biome) {
-        boolean peaches = ModList.get().isLoaded("fruitful") && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+        boolean peaches = Fruitful.isInstalled() && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
 
         biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
     }
 
+    public static void addSparseYellowMapleTrees(Biome biome) {
+        if (Autumnity.isInstalled()) {
+            biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Autumnity.MAPLE_TREE.withConfiguration(YELLOW_MAPLE_TREE_CONFIG).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(7))));
+        }
+    }
+
     public static void addTallBirchForestTrees(Biome biome) {
-        boolean peaches = ModList.get().isLoaded("fruitful") && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+        boolean peaches = Fruitful.isInstalled() && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
 
         biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG).withChance(0.5F)), ReforestedFeatures.BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG))).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
     }
@@ -73,7 +87,7 @@ public class ReforestedBiomeFeatures {
         List<ConfiguredFeature<?, ?>> toRemove = new ArrayList<>();
         int listSize = list.size();
 
-        boolean peaches = ModList.get().isLoaded("fruitful") && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+        boolean peaches = Fruitful.isInstalled() && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
 
         BirchFeatureConfig CONFIG_0 = peaches ? PEACH_BIRCH_TREE_CONFIG : BIRCH_TREE_CONFIG;
         BirchFeatureConfig CONFIG_1 = peaches ? PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG : BIRCH_TREE_BEEHIVES_1_CONFIG;

@@ -29,6 +29,7 @@ public class ReforestedFeatures {
 
         if (biome == Biomes.BIRCH_FOREST || biome == Biomes.BIRCH_FOREST_HILLS || biome == Biomes.TALL_BIRCH_HILLS) {
             ReforestedBiomeFeatures.addBirchForestFoliage(biome);
+            ReforestedBiomeFeatures.addSparseYellowMapleTrees(biome);
         }
         if (biome == Biomes.BIRCH_FOREST || biome == Biomes.BIRCH_FOREST_HILLS) {
             ReforestedBiomeFeatures.addSparseTallBirches(biome);
@@ -41,6 +42,7 @@ public class ReforestedFeatures {
         if (biome == Biomes.TALL_BIRCH_FOREST) {
             ReforestedBiomeFeatures.addTallBirchForestFoliage(biome);
             ReforestedBiomeFeatures.addTallBirchForestTrees(biome);
+            ReforestedBiomeFeatures.addSparseYellowMapleTrees(biome);
         }
     }
 }
