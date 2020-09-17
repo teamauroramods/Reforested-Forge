@@ -49,10 +49,10 @@ public class ReforestedBiomeFeatures {
     public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
 
     public static final BirchFeatureConfig PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,149).addWeightedBlockstate(PEACH_BIRCH_LEAVES,1), null, null, null)).func_236700_a_().build();
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
+    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
 
     public static final BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(PEACH_BIRCH_LEAVES,2), null, null, null)).func_236700_a_().build();
 
