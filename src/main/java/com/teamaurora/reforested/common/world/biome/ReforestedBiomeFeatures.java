@@ -182,8 +182,8 @@ public class ReforestedBiomeFeatures {
     }
 
     public static void addBirchForestFoliage(Biome biomeIn) {
-        biomeIn.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, ReforestedFeatures.SMALL_BOULDER.withConfiguration(new NoFeatureConfig()).withPlacement(Placement.COUNT_TOP_SOLID.configure(new FrequencyConfig(2))));
-        biomeIn.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.BIRCH_SHRUB.withConfiguration(BIRCH_TREE_CONFIG).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(4))));
+        biomeIn.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, ReforestedFeatures.SMALL_BOULDER.withConfiguration(new NoFeatureConfig()).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(3))));
+        biomeIn.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.BIRCH_SHRUB.withConfiguration(BIRCH_TREE_CONFIG).withPlacement(Placement.CHANCE_TOP_SOLID_HEIGHTMAP.configure(new ChanceConfig(5))));
     }
 
     public static void addTallBirchForestFoliage(Biome biomeIn) {
