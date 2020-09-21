@@ -40,7 +40,7 @@ public class ReforestedBiomeFeatures {
 
     public static BlockState BIRCH_LOG = Blocks.BIRCH_LOG.getDefaultState();
     public static BlockState BIRCH_LEAVES = Blocks.BIRCH_LEAVES.getDefaultState();
-    public static BlockState PEACH_BIRCH_LEAVES = Fruitful.isInstalled() ? Fruitful.PEACH_BIRCH_LEAVES.getDefaultState() : Blocks.BIRCH_LEAVES.getDefaultState();
+    //public static BlockState PEACH_BIRCH_LEAVES = Fruitful.isInstalled() ? Fruitful.PEACH_BIRCH_LEAVES_SUPPLIER.get() : Blocks.BIRCH_LEAVES.getDefaultState();
 
     private static final BeehiveTreeDecorator field_235163_cx_ = new BeehiveTreeDecorator(0.002F);
     private static final BeehiveTreeDecorator field_235164_cy_ = new BeehiveTreeDecorator(0.02F);
@@ -56,16 +56,15 @@ public class ReforestedBiomeFeatures {
     public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_3_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
     public static final BirchFeatureConfig BIRCH_TREE_BEEHIVES_4_CONFIG = BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
 
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,149).addWeightedBlockstate(PEACH_BIRCH_LEAVES,1), null, null, null)).func_236700_a_().build();
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
-    public static final BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
-
-    public static final BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(PEACH_BIRCH_LEAVES,2), null, null, null)).func_236700_a_().build();
-
     public static void addBirchTrees(Biome biome) {
         boolean peaches = Fruitful.isInstalled() && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+
+        BirchFeatureConfig PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,149).addWeightedBlockstate(Fruitful.PEACH_BIRCH_LEAVES.getDefaultState(),1), null, null, null)).func_236700_a_().build();
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
+        BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(Fruitful.PEACH_BIRCH_LEAVES.getDefaultState(),2), null, null, null)).func_236700_a_().build();
 
         biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ReforestedFeatures.BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
     }
@@ -79,6 +78,13 @@ public class ReforestedBiomeFeatures {
     public static void addTallBirchForestTrees(Biome biome) {
         boolean peaches = Fruitful.isInstalled() && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
 
+        BirchFeatureConfig PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,149).addWeightedBlockstate(Fruitful.PEACH_BIRCH_LEAVES.getDefaultState(),1), null, null, null)).func_236700_a_().build();
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
+        BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(Fruitful.PEACH_BIRCH_LEAVES.getDefaultState(),2), null, null, null)).func_236700_a_().build();
+
         biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(ReforestedFeatures.TALL_BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG).withChance(0.5F)), ReforestedFeatures.BIRCH_TREE.withConfiguration(peaches ? PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG : BIRCH_TREE_BEEHIVES_4_CONFIG))).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
     }
 
@@ -88,6 +94,13 @@ public class ReforestedBiomeFeatures {
         int listSize = list.size();
 
         boolean peaches = Fruitful.isInstalled() && ReforestedConfig.COMMON.peachBiomes.get().contains(biome.getRegistryName().toString());
+
+        BirchFeatureConfig PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,149).addWeightedBlockstate(Fruitful.PEACH_BIRCH_LEAVES.getDefaultState(),1), null, null, null)).func_236700_a_().build();
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235163_cx_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_2_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235164_cy_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_3_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(field_235165_cz_));
+        BirchFeatureConfig PEACH_BIRCH_TREE_BEEHIVES_4_CONFIG = PEACH_BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(BIRCH_BEEHIVE_DECORATOR));
+        BirchFeatureConfig DENSE_PEACH_BIRCH_TREE_CONFIG = (new BirchFeatureConfig.Builder(0.0F, new SimpleBlockStateProvider(BIRCH_LOG), (new WeightedBlockStateProvider()).addWeightedBlockstate(BIRCH_LEAVES,10).addWeightedBlockstate(Fruitful.PEACH_BIRCH_LEAVES.getDefaultState(),2), null, null, null)).func_236700_a_().build();
 
         BirchFeatureConfig CONFIG_0 = peaches ? PEACH_BIRCH_TREE_CONFIG : BIRCH_TREE_CONFIG;
         BirchFeatureConfig CONFIG_1 = peaches ? PEACH_BIRCH_TREE_BEEHIVES_1_CONFIG : BIRCH_TREE_BEEHIVES_1_CONFIG;

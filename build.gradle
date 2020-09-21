@@ -116,4 +116,5 @@ dependencies {
     implementation fg.deobf("curse.maven:abnormals-core:3043251")
     implementation fg.deobf("curse.maven:jei:2995910")
     implementation fg.deobf("curse.maven:autumnity:3027807")
+    implementation fg.deobf("curse.maven:fruitful:3036047")
 }
