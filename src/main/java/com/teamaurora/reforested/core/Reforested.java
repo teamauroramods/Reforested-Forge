@@ -1,11 +1,14 @@
 package com.teamaurora.reforested.core;
 
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
+import com.teamaurora.reforested.core.other.ReforestedEvents;
+import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -41,16 +44,18 @@ public class Reforested
 
         REGISTRY_HELPER.register(eventBus);
 
+        ReforestedFeatures.FEATURES.register(eventBus);
+
         MinecraftForge.EVENT_BUS.register(this);
 
-        eventBus.addListener(this::commonSetup);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            eventBus.addListener(this::clientSetup);
-        });
+        eventBus.addListener(EventPriority.LOWEST, this::commonSetup);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        MinecraftForge.EVENT_BUS.register(new ReforestedEvents());
+        event.enqueueWork(() -> {
+            ReforestedFeatures.Configured.registerConfiguredFeatures();
+        });
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
