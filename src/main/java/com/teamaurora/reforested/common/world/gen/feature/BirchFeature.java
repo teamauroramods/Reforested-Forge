@@ -1,10 +1,12 @@
 package com.teamaurora.reforested.common.world.gen.feature;
 
 import com.google.common.collect.Sets;
+import com.minecraftabnormals.abnormals_core.core.util.TreeUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +33,7 @@ public class BirchFeature extends Feature<BaseTreeFeatureConfig> {
         if (position.getY() <= 0 || position.getY() + height > worldIn.getHeight() - 2) {
             return false;
         }
-        if (!isValidGround(worldIn, position.down())) {
+        if (!TreeUtil.isValidGround(worldIn, position.down(), (SaplingBlock) Blocks.BIRCH_SAPLING)) {
             return false;
         }
         List<BlockPos> logs = new ArrayList<>();
@@ -50,19 +52,19 @@ public class BirchFeature extends Feature<BaseTreeFeatureConfig> {
 
         boolean flag = true;
         for (BlockPos log : logs) {
-            if (!isAirOrLeaves(worldIn, log)) {
+            if (!TreeUtil.isAirOrLeaves(worldIn, log)) {
                 flag = false;
             }
         }
         if (!flag) return false;
 
-        setDirtAt(worldIn, position.down());
+        TreeUtil.setDirtAt(worldIn, position.down());
 
         for (BlockPos log : logs) {
-            setLogState(worldIn, log, config.trunkProvider.getBlockState(rand, log));
+            TreeUtil.placeLogAt(worldIn, log, rand, config);
         }
         for (BlockPos leaf : leavesClean) {
-            if (isAirOrLeaves(worldIn, leaf)) setLogState(worldIn, leaf, config.leavesProvider.getBlockState(rand, leaf));
+            TreeUtil.placeLeafAt(worldIn, leaf, rand, config);
         }
 
 
@@ -95,6 +97,14 @@ public class BirchFeature extends Feature<BaseTreeFeatureConfig> {
                 leaf.add(pos.offset(Direction.byHorizontalIndex(i)));
             }
         }
+        int i1 = rand.nextInt(4);
+        int i2 = (i1 + 1 + rand.nextInt(3)) % 4;
+        if (!leaf.contains(pos.offset(Direction.byHorizontalIndex(i1)))) {
+            leaf.add(pos.offset(Direction.byHorizontalIndex(i1)));
+        }
+        if (!leaf.contains(pos.offset(Direction.byHorizontalIndex(i2)))) {
+            leaf.add(pos.offset(Direction.byHorizontalIndex(i2)));
+        }
     }
 
     private List<BlockPos> cleanLeavesArray(List<BlockPos> leaves, List<BlockPos> logs) {
@@ -105,36 +115,5 @@ public class BirchFeature extends Feature<BaseTreeFeatureConfig> {
             }
         }
         return newLeaves;
-    }
-
-    protected final void setLogState(IWorldWriter worldIn, BlockPos pos, BlockState state) {
-        worldIn.setBlockState(pos, state, 18);
-    }
-
-    public static boolean isAir(IWorldGenerationBaseReader worldIn, BlockPos pos) {
-        if (!(worldIn instanceof IBlockReader)) {
-            return worldIn.hasBlockState(pos, BlockState::isAir);
-        }
-        else {
-            return worldIn.hasBlockState(pos, state -> state.isAir((IBlockReader) worldIn, pos));
-        }
-    }
-
-    public static boolean isAirOrLeaves(IWorldGenerationBaseReader worldIn, BlockPos pos) {
-        if (worldIn instanceof IWorldReader) {
-            return worldIn.hasBlockState(pos, state -> state.canBeReplacedByLeaves((IWorldReader) worldIn, pos));
-        }
-        return worldIn.hasBlockState(pos, (state) -> state.isAir() || state.isIn(BlockTags.LEAVES));
-    }
-
-    public static void setDirtAt(IWorld worldIn, BlockPos pos) {
-        Block block = worldIn.getBlockState(pos).getBlock();
-        if (block == Blocks.GRASS_BLOCK || block == Blocks.FARMLAND) {
-            worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState(), 16);
-        }
-    }
-
-    public static boolean isValidGround(IWorld world, BlockPos pos) {
-        return world.getBlockState(pos).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.BIRCH_SAPLING);
     }
 }

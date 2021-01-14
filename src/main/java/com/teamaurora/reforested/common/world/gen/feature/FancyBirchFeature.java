@@ -1,11 +1,9 @@
 package com.teamaurora.reforested.common.world.gen.feature;
 
 import com.google.common.collect.Sets;
+import com.minecraftabnormals.abnormals_core.core.util.TreeUtil;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.block.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -26,13 +24,13 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
         super(config);
     }
 
-    private class AxisBlockPos {
+    private class DirectionalBlockPos {
         public BlockPos pos;
-        public Direction.Axis axis;
+        public Direction direction;
 
-        public AxisBlockPos(BlockPos p, Direction.Axis a) {
+        public DirectionalBlockPos(BlockPos p, Direction a) {
             pos = p;
-            axis = a;
+            direction = a;
         }
     }
 
@@ -42,14 +40,14 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
         if (position.getY() <= 0 || position.getY() + height > worldIn.getHeight() - 4) {
             return false;
         }
-        if (!isValidGround(worldIn, position.down())) {
+        if (!TreeUtil.isValidGround(worldIn, position.down(), (SaplingBlock) Blocks.BIRCH_SAPLING)) {
             return false;
         }
-        List<AxisBlockPos> logs = new ArrayList<>();
+        List<DirectionalBlockPos> logs = new ArrayList<>();
         List<BlockPos> leaves = new ArrayList<>();
 
         for (int i = 0; i < height; i++) {
-            logs.add(new AxisBlockPos(position.up(i), Direction.Axis.Y));
+            logs.add(new DirectionalBlockPos(position.up(i), Direction.UP));
         }
         for (int i = 0; i < 4; i++) {
             if (rand.nextInt(16) < height && height >= 8) {
@@ -69,20 +67,20 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
         List<BlockPos> leavesClean = cleanLeavesArray(leaves, logs);
 
         boolean flag = true;
-        for (AxisBlockPos log : logs) {
-            if (!isAirOrLeaves(worldIn, log.pos)) {
+        for (DirectionalBlockPos log : logs) {
+            if (!TreeUtil.isAirOrLeaves(worldIn, log.pos)) {
                 flag = false;
             }
         }
         if (!flag) return false;
 
-        setDirtAt(worldIn, position.down());
+        TreeUtil.setDirtAt(worldIn, position.down());
 
-        for (AxisBlockPos log : logs) {
-            setLogState(worldIn, log.pos, config.trunkProvider.getBlockState(rand, log.pos).with(RotatedPillarBlock.AXIS, log.axis));
+        for (DirectionalBlockPos log : logs) {
+            TreeUtil.placeDirectionalLogAt(worldIn, log.pos, log.direction, rand, config);
         }
         for (BlockPos leaf : leavesClean) {
-            if (isAirOrLeaves(worldIn, leaf)) setLogState(worldIn, leaf, config.leavesProvider.getBlockState(rand, leaf));
+            TreeUtil.placeLeafAt(worldIn, leaf, rand, config);
         }
 
 
@@ -90,7 +88,7 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
         MutableBoundingBox mutableBoundingBox = MutableBoundingBox.getNewBoundingBox();
 
         List<BlockPos> logsPos = new ArrayList<>();
-        for (AxisBlockPos log : logs) {
+        for (DirectionalBlockPos log : logs) {
             logsPos.add(log.pos);
         }
 
@@ -103,7 +101,7 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
         return true;
     }
 
-    private void addBranch(BlockPos pos, List<BlockPos> leaves, List<AxisBlockPos> logs, Random rand, Direction dir) {
+    private void addBranch(BlockPos pos, List<BlockPos> leaves, List<DirectionalBlockPos> logs, Random rand, Direction dir) {
         int bendAmount = rand.nextInt(3) - 1;
         BlockPos pos1;
         if (rand.nextInt(3) == 0) {
@@ -113,9 +111,9 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
             // single diagonal
             pos1 = pos.offset(dir);
         }
-        logs.add(new AxisBlockPos(pos1, dir.getAxis()));
+        logs.add(new DirectionalBlockPos(pos1, dir));
         BlockPos pos2 = pos1.offset(dir).offset(dir.rotateY(), bendAmount).up();
-        logs.add(new AxisBlockPos(pos2, dir.getAxis()));
+        logs.add(new DirectionalBlockPos(pos2, dir));
         addCanopy(pos2, leaves, rand);
     }
 
@@ -168,9 +166,9 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
         }
     }
 
-    private List<BlockPos> cleanLeavesArray(List<BlockPos> leaves, List<AxisBlockPos> logs) {
+    private List<BlockPos> cleanLeavesArray(List<BlockPos> leaves, List<DirectionalBlockPos> logs) {
         List<BlockPos> logsPos = new ArrayList<>();
-        for (AxisBlockPos log : logs) {
+        for (DirectionalBlockPos log : logs) {
             logsPos.add(log.pos);
         }
         List<BlockPos> newLeaves = new ArrayList<>();
@@ -180,36 +178,5 @@ public class FancyBirchFeature extends Feature<BaseTreeFeatureConfig> {
             }
         }
         return newLeaves;
-    }
-
-    protected final void setLogState(IWorldWriter worldIn, BlockPos pos, BlockState state) {
-        worldIn.setBlockState(pos, state, 18);
-    }
-
-    public static boolean isAir(IWorldGenerationBaseReader worldIn, BlockPos pos) {
-        if (!(worldIn instanceof IBlockReader)) {
-            return worldIn.hasBlockState(pos, BlockState::isAir);
-        }
-        else {
-            return worldIn.hasBlockState(pos, state -> state.isAir((IBlockReader) worldIn, pos));
-        }
-    }
-
-    public static boolean isAirOrLeaves(IWorldGenerationBaseReader worldIn, BlockPos pos) {
-        if (worldIn instanceof IWorldReader) {
-            return worldIn.hasBlockState(pos, state -> state.canBeReplacedByLeaves((IWorldReader) worldIn, pos));
-        }
-        return worldIn.hasBlockState(pos, (state) -> state.isAir() || state.isIn(BlockTags.LEAVES));
-    }
-
-    public static void setDirtAt(IWorld worldIn, BlockPos pos) {
-        Block block = worldIn.getBlockState(pos).getBlock();
-        if (block == Blocks.GRASS_BLOCK || block == Blocks.FARMLAND) {
-            worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState(), 16);
-        }
-    }
-
-    public static boolean isValidGround(IWorld world, BlockPos pos) {
-        return world.getBlockState(pos).canSustainPlant(world, pos, Direction.UP, (IPlantable) Blocks.BIRCH_SAPLING);
     }
 }

@@ -1,10 +1,12 @@
 package com.teamaurora.reforested.core;
 
+import com.google.common.collect.ImmutableList;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.teamaurora.reforested.core.other.ReforestedEvents;
 import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.world.gen.feature.Features;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -55,6 +57,12 @@ public class Reforested
         MinecraftForge.EVENT_BUS.register(new ReforestedEvents());
         event.enqueueWork(() -> {
             ReforestedFeatures.Configured.registerConfiguredFeatures();
+            Features.BIRCH = ReforestedFeatures.BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG);
+            Features.SUPER_BIRCH_BEES_0002 = ReforestedFeatures.FANCY_BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(Features.Placements.BEES_0002_PLACEMENT)));
+            Features.BIRCH_BEES_0002 = ReforestedFeatures.BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(Features.Placements.BEES_0002_PLACEMENT)));
+            Features.BIRCH_BEES_002 = ReforestedFeatures.BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(Features.Placements.BEES_002_PLACEMENT)));
+            Features.BIRCH_BEES_005 = ReforestedFeatures.BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(Features.Placements.BEES_005_PLACEMENT)));
+
         });
     }
 
