@@ -3,6 +3,7 @@ package com.teamaurora.reforested.core;
 import com.google.common.collect.ImmutableList;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.teamaurora.reforested.core.other.ReforestedEvents;
+import com.teamaurora.reforested.core.registry.ReforestedBiomes;
 import com.teamaurora.reforested.core.registry.ReforestedFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -63,6 +64,9 @@ public class Reforested
             Features.BIRCH_BEES_002 = ReforestedFeatures.BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(Features.Placements.BEES_002_PLACEMENT)));
             Features.BIRCH_BEES_005 = ReforestedFeatures.BIRCH_TREE.get().withConfiguration(ReforestedFeatures.Configs.BIRCH_TREE_CONFIG.func_236685_a_(ImmutableList.of(Features.Placements.BEES_005_PLACEMENT)));
 
+            ReforestedBiomes.addBiomeTypes();
+            ReforestedBiomes.registerBiomesToDictionary();
+            ReforestedBiomes.addBiomeVariants();
         });
     }
 

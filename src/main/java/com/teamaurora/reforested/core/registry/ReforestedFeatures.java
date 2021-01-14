@@ -19,6 +19,7 @@ import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.FancyFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
+import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -36,107 +37,6 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(modid = Reforested.MODID)
 public class ReforestedFeatures {
 
-    private static boolean isBirch(BaseTreeFeatureConfig config) {
-        if (config.trunkProvider instanceof SimpleBlockStateProvider) {
-            if (((SimpleBlockStateProvider)config.trunkProvider).getBlockState(new Random(), new BlockPos(0, 0, 0)).getBlock() == Blocks.BIRCH_LOG) {
-                return config.foliagePlacer instanceof BlobFoliagePlacer;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @SubscribeEvent
-    public static void addFeatures(BiomeLoadingEvent event) {
-        ResourceLocation biomeName = event.getName();
-
-        boolean birchBiome = DataUtil.matchesKeys(biomeName, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS);
-
-        List<Supplier<ConfiguredFeature<?, ?>>> features = event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
-        if (event.getName() != null) {
-            List<Supplier<ConfiguredFeature<?, ?>>> toRemove = new ArrayList<>();
-            List<ConfiguredFeature<?, ?>> toAdd = new ArrayList<>();
-            for (Supplier<ConfiguredFeature<?, ?>> configuredFeatureSupplier : features) {
-                IFeatureConfig config = configuredFeatureSupplier.get().config;
-                if (config instanceof DecoratedFeatureConfig) {
-                    ConfiguredFeature<?, ?> configuredFeature1 = ((DecoratedFeatureConfig) config).feature.get();
-                    IFeatureConfig config1 = configuredFeature1.config;
-                    if (config1 instanceof DecoratedFeatureConfig) {
-                        ConfiguredFeature<?, ?> configuredFeature = ((DecoratedFeatureConfig) config1).feature.get();
-                        if (configuredFeature.config instanceof MultipleRandomFeatureConfig) {
-                            MultipleRandomFeatureConfig mrfconfig = (MultipleRandomFeatureConfig) configuredFeature.config;
-
-                            ConfiguredFeature<?, ?> tempDef = mrfconfig.defaultFeature.get();
-                            if (tempDef.config instanceof BaseTreeFeatureConfig && isBirch((BaseTreeFeatureConfig) tempDef.config)) {
-                                tempDef = Configured.BIRCH_BEES_0002;
-                            }
-
-                            List<ConfiguredRandomFeatureList> tempFeatures = new ArrayList<>();
-                            for (ConfiguredRandomFeatureList crfl : mrfconfig.features) {
-                                ConfiguredFeature<?, ?> crflFeature = crfl.feature.get();
-                                if (crflFeature.config instanceof BaseTreeFeatureConfig && isBirch((BaseTreeFeatureConfig) crflFeature.config)) {
-                                    tempFeatures.add(new ConfiguredRandomFeatureList(Configured.BIRCH_BEES_002, crfl.chance));
-                                } else {
-                                    tempFeatures.add(crfl);
-                                }
-                            }
-
-                            MultipleRandomFeatureConfig tempConfig = new MultipleRandomFeatureConfig(tempFeatures, tempDef);
-                            if (tempConfig != mrfconfig) {
-                                toRemove.add(configuredFeatureSupplier);
-                                Feature<MultipleRandomFeatureConfig> featureMRFC = (Feature<MultipleRandomFeatureConfig>) configuredFeature.feature;
-                                ConfiguredFeature<?, ?> featurePlaced =  featureMRFC.withConfiguration(tempConfig).withPlacement(((DecoratedFeatureConfig) config1).decorator);
-                                if (!birchBiome) toAdd.add(featurePlaced.withPlacement(((DecoratedFeatureConfig) config).decorator));
-                            }
-                        } else if (configuredFeature.config instanceof BaseTreeFeatureConfig) {
-                            if (isBirch((BaseTreeFeatureConfig) configuredFeature.config)) {
-                                toRemove.add(configuredFeatureSupplier);
-                                ConfiguredFeature<?, ?> featurePlaced =  Configured.BIRCH_BEES_002.withPlacement(((DecoratedFeatureConfig) config1).decorator);
-                                if (!birchBiome) toAdd.add(featurePlaced.withPlacement(((DecoratedFeatureConfig) config).decorator));
-                            }
-                        }
-                    } else if (config1 instanceof MultipleRandomFeatureConfig) {
-                        MultipleRandomFeatureConfig mrfconfig = (MultipleRandomFeatureConfig) configuredFeature1.config;
-
-                        ConfiguredFeature<?, ?> tempDef = mrfconfig.defaultFeature.get();
-                        if (tempDef.config instanceof BaseTreeFeatureConfig && isBirch((BaseTreeFeatureConfig) tempDef.config)) {
-                            tempDef = Configured.BIRCH_BEES_0002;
-                        }
-
-                        List<ConfiguredRandomFeatureList> tempFeatures = new ArrayList<>();
-                        for (ConfiguredRandomFeatureList crfl : mrfconfig.features) {
-                            ConfiguredFeature<?, ?> crflFeature = crfl.feature.get();
-                            if (crflFeature.config instanceof BaseTreeFeatureConfig && isBirch((BaseTreeFeatureConfig) crflFeature.config)) {
-                                tempFeatures.add(new ConfiguredRandomFeatureList(Configured.BIRCH_BEES_002, crfl.chance));
-                            } else {
-                                tempFeatures.add(crfl);
-                            }
-                        }
-
-                        MultipleRandomFeatureConfig tempConfig = new MultipleRandomFeatureConfig(tempFeatures, tempDef);
-                        if (tempConfig != mrfconfig) {
-                            toRemove.add(configuredFeatureSupplier);
-                            Feature<MultipleRandomFeatureConfig> featureMRFC = (Feature<MultipleRandomFeatureConfig>) configuredFeature1.feature;
-                            if (!birchBiome) toAdd.add(featureMRFC.withConfiguration(tempConfig).withPlacement(((DecoratedFeatureConfig) config).decorator));
-                        }
-                    }
-                }
-            }
-            toRemove.forEach(features::remove);
-            for (ConfiguredFeature<?, ?> f : toAdd) {
-                event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, f);
-            }
-        }
-
-        if (DataUtil.matchesKeys(biomeName, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS)) {
-            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Configured.TREES_BIRCH);
-        } else if (DataUtil.matchesKeys(biomeName, Biomes.TALL_BIRCH_HILLS, Biomes.TALL_BIRCH_FOREST)) {
-            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Configured.TREES_BIRCH_TALL);
-        }
-    }
-
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Reforested.MODID);
 
     public static final RegistryObject<Feature<BaseTreeFeatureConfig>> BIRCH_TREE = FEATURES.register("birch_tree", ()->new BirchFeature(BaseTreeFeatureConfig.CODEC));
@@ -149,6 +49,8 @@ public class ReforestedFeatures {
 
     public static final class Configs {
         public static final BaseTreeFeatureConfig BIRCH_TREE_CONFIG = (new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(BlockStates.BIRCH_LOG), new SimpleBlockStateProvider(BlockStates.BIRCH_LEAVES), new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0), new StraightTrunkPlacer(0, 0, 0), new TwoLayerFeature(0, 0, 0))).setIgnoreVines().build();
+
+        //public static final MultipleRandomFeatureConfig TREES_MIXED_TALL_CONFIG = (new MultipleRandomFeatureConfig(ImmutableList.of(Configured.BIRCH_BEES_0002.withChance(0.1F), Configured.FANCY_BIRCH_BEES_0002.withChance(0.1F), Features.FANCY_OAK_BEES_0002.withChance(0.4F)), Features.OAK_BEES_0002)); //.withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1)))
     }
 
     public static final class Configured {
@@ -162,7 +64,8 @@ public class ReforestedFeatures {
         public static final ConfiguredFeature<?, ?> TREES_BIRCH_TALL = Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(FANCY_BIRCH_BEES_0002.withChance(0.5F)), BIRCH_BEES_0002)).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1)));
         public static final ConfiguredFeature<?, ?> TREES_BIRCH = Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(FANCY_BIRCH_BEES_0002.withChance(0.1F)), BIRCH_BEES_0002)).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1)));
 
-
+        public static final ConfiguredFeature<?, ?> TREES_FANCY_OAK = Features.FANCY_OAK.withPlacement(Placement.CHANCE.configure(new ChanceConfig(2)));
+        public static final ConfiguredFeature<?, ?> TREES_MIXED_TALL = Feature.RANDOM_SELECTOR.withConfiguration((new MultipleRandomFeatureConfig(ImmutableList.of(Configured.BIRCH_BEES_0002.withChance(0.1F), Configured.FANCY_BIRCH_BEES_0002.withChance(0.1F), Features.FANCY_OAK_BEES_0002.withChance(0.4F)), Features.OAK_BEES_0002))).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(10, 0.1F, 1)));
 
         private static <FC extends IFeatureConfig> void register(String name, ConfiguredFeature<FC, ?> configuredFeature) {
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Reforested.MODID, name), configuredFeature);
@@ -178,6 +81,8 @@ public class ReforestedFeatures {
 
             register("trees_birch", TREES_BIRCH);
             register("trees_birch_tall", TREES_BIRCH_TALL);
+
+            register("trees_fancy_oak", TREES_FANCY_OAK);
         }
     }
 }
